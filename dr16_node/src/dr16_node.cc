@@ -4,7 +4,7 @@
 #include <iostream>
 #include <chrono>
 
-#include <fcntl.h> /* File control definitions */
+#include <fcntl.h>
 #include <cstring>
 #include <unistd.h>
 
@@ -19,6 +19,10 @@ extern int ioctl(int __fd, unsigned long int __request, ...) throw();
 }
 
 using namespace std::chrono_literals;
+
+static double Map(double value, double from_min, double from_max, double to_min, double to_max) {
+  return (value - from_min) * (to_max - to_min) / (from_max - from_min) + to_min;
+}
 
 Dr16Node::Dr16Node(const rclcpp::NodeOptions &options) : rclcpp::Node("dr16_node", options) {
   this->declare_parameter<std::string>("tty_device", "/dev/ttyTHS0");
@@ -123,10 +127,14 @@ void Dr16Node::Unpack(int received_total_data_len) {
   this->dr16_.axes[4] -= 1024;
 
   this->joy_msg_.header.stamp = this->now();
-  this->joy_msg_.axes = {(float)this->dr16_.axes[0] / 660.0f,  (float)this->dr16_.axes[1] / 660.0f,
-                         (float)this->dr16_.axes[2] / 660.0f,  (float)this->dr16_.axes[3] / 660.0f,
-                         (float)this->dr16_.axes[4] / 660.0f,  (float)this->dr16_.mouse[0] / 660.0f,
-                         (float)this->dr16_.mouse[1] / 660.0f, (float)this->dr16_.mouse[2] / 660.0f};
+  this->joy_msg_.axes = {(float)this->dr16_.axes[0] / 660.0f,
+                         (float)this->dr16_.axes[1] / 660.0f,
+                         (float)this->dr16_.axes[2] / 660.0f,
+                         (float)this->dr16_.axes[3] / 660.0f,
+                         (float)this->dr16_.axes[4] / 660.0f,
+                         Map((float)this->dr16_.mouse[0], -32768, 32767, -1, 1),
+                         Map((float)this->dr16_.mouse[1], -32768, 32767, -1, 1),
+                         Map((float)this->dr16_.mouse[2], -32768, 32767, -1, 1)};
   this->joy_msg_.buttons = {this->dr16_.switches[0], this->dr16_.switches[1], this->dr16_.mouse_button[0],
                             this->dr16_.mouse_button[1], this->dr16_.keyboard_key};
   this->joy_pub_->publish(this->joy_msg_);
