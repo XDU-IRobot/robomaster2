@@ -20,7 +20,7 @@ extern int ioctl(int __fd, unsigned long int __request, ...) throw();
 
 using namespace std::chrono_literals;
 
-static double Map(double value, double from_min, double from_max, double to_min, double to_max) {
+static float Map(float value, float from_min, float from_max, float to_min, float to_max) {
   return (value - from_min) * (to_max - to_min) / (from_max - from_min) + to_min;
 }
 
