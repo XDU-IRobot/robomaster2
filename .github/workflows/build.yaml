@@ -1,0 +1,37 @@
+name: build
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ros_distro: foxy
+            docker_image: osrf/ros:foxy-desktop
+          - ros_distro: galactic
+            docker_image: osrf/ros:galactic-desktop
+          - ros_distro: humble
+            docker_image: osrf/ros:humble-desktop
+          - ros_distro: iron
+            docker_image: osrf/ros:iron-desktop
+          - ros_distro: jazzy
+            docker_image: osrf/ros:jazzy-desktop
+          - ros_distro: rolling
+            docker_image: osrf/ros:rolling-desktop
+
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.docker_image }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+          token: ${{ secrets.CI }}
+      - name: Build
+        shell: bash
+        run: source /opt/ros/${{ matrix.ros_distro }}/setup.sh;colcon build --cmake-args -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}

@@ -1,4 +1,7 @@
 
+#ifndef DR16_NODE_HPP_
+#define DR16_NODE_HPP_
+
 #include <thread>
 
 #include <rclcpp/rclcpp.hpp>
@@ -36,3 +39,5 @@ class Dr16Node : public rclcpp::Node {
   int serial_fd_{};
   uint8_t serial_buffer_[100]{};
 };
+
+#endif  // DR16_NODE_HPP_

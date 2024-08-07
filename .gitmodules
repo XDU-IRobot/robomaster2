@@ -1,0 +1,3 @@
+[submodule "rm2_referee/referee_node/libs/serial"]
+	path = rm2_referee/referee_node/libs/serial
+	url = https://github.com/lunarifish/serial.git

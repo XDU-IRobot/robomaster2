@@ -30,7 +30,7 @@ Dr16Node::Dr16Node(const rclcpp::NodeOptions &options) : rclcpp::Node("dr16_node
 
   RCLCPP_INFO(this->get_logger(), "tty_device: %s", this->param_tty_device_.c_str());
 
-  this->joy_pub_ = this->create_publisher<sensor_msgs::msg::Joy>("/rmos_ec_referee/joy", 10);
+  this->joy_pub_ = this->create_publisher<sensor_msgs::msg::Joy>("/rm2_remote/joy", 10);
   this->SerialInit();
 
   this->serial_rx_thread_ = std::thread([this]() {
@@ -112,9 +112,9 @@ void Dr16Node::Unpack(int received_total_data_len) {
   this->dr16_.axes[3] = ((buf[4] >> 1) | (buf[5] << 7)) & 0x07ff;  //!< Channel 3
   this->dr16_.switches[0] = ((buf[5] >> 4) & 0x0003);              //!< Switch left
   this->dr16_.switches[1] = (((buf[5] >> 4) & 0x000c) >> 2);       //!< Switch right
-  this->dr16_.mouse[0] = (int16_t)(buf[6] | (buf[7] << 8));                   //!< Mouse X axis
-  this->dr16_.mouse[1] = (int16_t)(buf[8] | (buf[9] << 8));                   //!< Mouse Y axis
-  this->dr16_.mouse[2] = (int16_t)(buf[10] | (buf[11] << 8));                 //!< Mouse Z axis
+  this->dr16_.mouse[0] = (int16_t)(buf[6] | (buf[7] << 8));        //!< Mouse X axis
+  this->dr16_.mouse[1] = (int16_t)(buf[8] | (buf[9] << 8));        //!< Mouse Y axis
+  this->dr16_.mouse[2] = (int16_t)(buf[10] | (buf[11] << 8));      //!< Mouse Z axis
   this->dr16_.mouse_button[0] = buf[12];                           //!< Mouse Left Is Press ?
   this->dr16_.mouse_button[1] = buf[13];                           //!< Mouse Right Is Press ?
   this->dr16_.keyboard_key = buf[14] | (buf[15] << 8);             //!< KeyBoard value

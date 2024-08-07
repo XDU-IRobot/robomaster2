@@ -1,0 +1,3 @@
+std_msgs/Header header
+uint8 armor_id
+uint8 hp_deduction_reason
