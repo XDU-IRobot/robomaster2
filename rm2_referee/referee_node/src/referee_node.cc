@@ -64,39 +64,53 @@ RefereeNode::~RefereeNode() {
 }
 
 void RefereeNode::SpawnPublishers() {
-  game_status_pub_ = this->create_publisher<rm2_referee_msgs::msg::GameStatus>("/rm2_referee/game_status", 10);
-  game_result_pub_ = this->create_publisher<rm2_referee_msgs::msg::GameResult>("/rm2_referee/game_result", 10);
-  game_robot_hp_pub_ = this->create_publisher<rm2_referee_msgs::msg::GameRobotHP>("/rm2_referee/game_robot_hp", 10);
-  event_data_pub_ = this->create_publisher<rm2_referee_msgs::msg::EventData>("/rm2_referee/event_data", 10);
+  game_status_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::GameStatus>("/rm2_referee/game_status", rclcpp::SensorDataQos());
+  game_result_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::GameResult>("/rm2_referee/game_result", rclcpp::SensorDataQos());
+  game_robot_hp_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::GameRobotHP>("/rm2_referee/game_robot_hp", rclcpp::SensorDataQos());
+  event_data_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::EventData>("/rm2_referee/event_data", rclcpp::SensorDataQos());
   ext_supply_projectile_action_pub_ = this->create_publisher<rm2_referee_msgs::msg::ExtSupplyProjectileAction>(
-      "/rm2_referee/ext_supply_projectile_action", 10);
-  referee_warning_pub_ =
-      this->create_publisher<rm2_referee_msgs::msg::RefereeWarning>("/rm2_referee/referee_warning", 10);
-  dart_info_pub_ = this->create_publisher<rm2_referee_msgs::msg::DartInfo>("/rm2_referee/dart_info", 10);
-  robot_status_pub_ = this->create_publisher<rm2_referee_msgs::msg::RobotStatus>("/rm2_referee/robot_status", 10);
-  power_heat_data_pub_ =
-      this->create_publisher<rm2_referee_msgs::msg::PowerHeatData>("/rm2_referee/power_heat_data", 10);
-  robot_pos_pub_ = this->create_publisher<rm2_referee_msgs::msg::RobotPos>("/rm2_referee/robot_pos", 10);
-  buff_pub_ = this->create_publisher<rm2_referee_msgs::msg::Buff>("/rm2_referee/buff", 10);
-  air_support_data_pub_ =
-      this->create_publisher<rm2_referee_msgs::msg::AirSupportData>("/rm2_referee/air_support_data", 10);
-  hurt_data_pub_ = this->create_publisher<rm2_referee_msgs::msg::HurtData>("/rm2_referee/hurt_data", 10);
-  shoot_data_pub_ = this->create_publisher<rm2_referee_msgs::msg::ShootData>("/rm2_referee/shoot_data", 10);
-  projectile_allowance_pub_ =
-      this->create_publisher<rm2_referee_msgs::msg::ProjectileAllowance>("/rm2_referee/projectile_allowance", 10);
-  rfid_status_pub_ = this->create_publisher<rm2_referee_msgs::msg::RFIDStatus>("/rm2_referee/rfid_status", 10);
-  dart_client_cmd_pub_ =
-      this->create_publisher<rm2_referee_msgs::msg::DartClientCmd>("/rm2_referee/dart_client_cmd", 10);
-  ground_robot_position_pub_ =
-      this->create_publisher<rm2_referee_msgs::msg::GroundRobotPosition>("/rm2_referee/ground_robot_position", 10);
-  radar_mark_data_pub_ =
-      this->create_publisher<rm2_referee_msgs::msg::RadarMarkData>("/rm2_referee/radar_mark_data", 10);
-  sentry_info_pub_ = this->create_publisher<rm2_referee_msgs::msg::SentryInfo>("/rm2_referee/sentry_info", 10);
-  radar_info_pub_ = this->create_publisher<rm2_referee_msgs::msg::RadarInfo>("/rm2_referee/radar_info", 10);
-  custom_robot_data_pub_ =
-      this->create_publisher<rm2_referee_msgs::msg::CustomRobotData>("/rm2_referee/custom_robot_data", 10);
-  map_command_pub_ = this->create_publisher<rm2_referee_msgs::msg::MapCommand>("/rm2_referee/map_command", 10);
-  remote_control_pub_ = this->create_publisher<rm2_referee_msgs::msg::RemoteControl>("/rm2_referee/remote_control", 10);
+      "/rm2_referee/ext_supply_projectile_action", rclcpp::SensorDataQos());
+  referee_warning_pub_ = this->create_publisher<rm2_referee_msgs::msg::RefereeWarning>("/rm2_referee/referee_warning",
+                                                                                       rclcpp::SensorDataQos());
+  dart_info_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::DartInfo>("/rm2_referee/dart_info", rclcpp::SensorDataQos());
+  robot_status_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::RobotStatus>("/rm2_referee/robot_status", rclcpp::SensorDataQos());
+  power_heat_data_pub_ = this->create_publisher<rm2_referee_msgs::msg::PowerHeatData>("/rm2_referee/power_heat_data",
+                                                                                      rclcpp::SensorDataQos());
+  robot_pos_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::RobotPos>("/rm2_referee/robot_pos", rclcpp::SensorDataQos());
+  buff_pub_ = this->create_publisher<rm2_referee_msgs::msg::Buff>("/rm2_referee/buff", rclcpp::SensorDataQos());
+  air_support_data_pub_ = this->create_publisher<rm2_referee_msgs::msg::AirSupportData>("/rm2_referee/air_support_data",
+                                                                                        rclcpp::SensorDataQos());
+  hurt_data_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::HurtData>("/rm2_referee/hurt_data", rclcpp::SensorDataQos());
+  shoot_data_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::ShootData>("/rm2_referee/shoot_data", rclcpp::SensorDataQos());
+  projectile_allowance_pub_ = this->create_publisher<rm2_referee_msgs::msg::ProjectileAllowance>(
+      "/rm2_referee/projectile_allowance", rclcpp::SensorDataQos());
+  rfid_status_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::RFIDStatus>("/rm2_referee/rfid_status", rclcpp::SensorDataQos());
+  dart_client_cmd_pub_ = this->create_publisher<rm2_referee_msgs::msg::DartClientCmd>("/rm2_referee/dart_client_cmd",
+                                                                                      rclcpp::SensorDataQos());
+  ground_robot_position_pub_ = this->create_publisher<rm2_referee_msgs::msg::GroundRobotPosition>(
+      "/rm2_referee/ground_robot_position", rclcpp::SensorDataQos());
+  radar_mark_data_pub_ = this->create_publisher<rm2_referee_msgs::msg::RadarMarkData>("/rm2_referee/radar_mark_data",
+                                                                                      rclcpp::SensorDataQos());
+  sentry_info_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::SentryInfo>("/rm2_referee/sentry_info", rclcpp::SensorDataQos());
+  radar_info_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::RadarInfo>("/rm2_referee/radar_info", rclcpp::SensorDataQos());
+  custom_robot_data_pub_ = this->create_publisher<rm2_referee_msgs::msg::CustomRobotData>(
+      "/rm2_referee/custom_robot_data", rclcpp::SensorDataQos());
+  map_command_pub_ =
+      this->create_publisher<rm2_referee_msgs::msg::MapCommand>("/rm2_referee/map_command", rclcpp::SensorDataQos());
+  remote_control_pub_ = this->create_publisher<rm2_referee_msgs::msg::RemoteControl>("/rm2_referee/remote_control",
+                                                                                     rclcpp::SensorDataQos());
   RCLCPP_INFO(this->get_logger(), "Publishers spawned");
 }
 
