@@ -1,7 +1,5 @@
 # rm2_referee
 
-裁判系统
-
 当前版本为[V1.6.3, 2024-5-31](https://rm-static.djicdn.com/tem/71710/RoboMaster%20%E8%A3%81%E5%88%A4%E7%B3%BB%E7%BB%9F%E4%B8%B2%E5%8F%A3%E5%8D%8F%E8%AE%AE%E9%99%84%E5%BD%95%20V1.6.3%EF%BC%8820240527%EF%BC%89.pdf)
 
 ## 使用
@@ -9,7 +7,7 @@
 设置`referee_node/config/settings.yaml`里的配置项，然后编译、启动节点：
 
 ```bash
-colcon build
+colcon build --symlink-install
 source install/setup.bash
 ros2 launch referee_node referee_node.launch.py
 ```
