@@ -1,4 +1,4 @@
-name: build
+name: build_eol
 
 on: [push, pull_request]
 
@@ -11,14 +11,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - ros_distro: humble
-            docker_image: osrf/ros:humble-desktop
-          - ros_distro: iron
-            docker_image: osrf/ros:iron-desktop
-          - ros_distro: jazzy
-            docker_image: osrf/ros:jazzy-desktop
-          - ros_distro: rolling
-            docker_image: osrf/ros:rolling-desktop
+          - ros_distro: foxy
+            docker_image: osrf/ros:foxy-desktop
+          - ros_distro: galactic
+            docker_image: osrf/ros:galactic-desktop
 
     runs-on: ubuntu-latest
     container:
