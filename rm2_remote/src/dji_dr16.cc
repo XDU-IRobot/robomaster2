@@ -1,5 +1,5 @@
 
-#include "dr16_node.hpp"
+#include "dji_dr16.hpp"
 
 #include <iostream>
 #include <chrono>
@@ -24,11 +24,11 @@ static float Map(float value, float from_min, float from_max, float to_min, floa
   return (value - from_min) * (to_max - to_min) / (from_max - from_min) + to_min;
 }
 
-Dr16Node::Dr16Node(const rclcpp::NodeOptions &options) : rclcpp::Node("dr16_node", options) {
-  this->declare_parameter<std::string>("tty_device", "/dev/ttyTHS0");
-  this->get_parameter<std::string>("tty_device", this->param_tty_device_);
+Dr16Node::Dr16Node(const rclcpp::NodeOptions &options) : rclcpp::Node("dji_dr16", options) {
+  this->declare_parameter<std::string>("serial_port", "/dev/ttyTHS0");
+  this->get_parameter<std::string>("serial_port", this->param_serial_port_);
 
-  RCLCPP_INFO(this->get_logger(), "tty_device: %s", this->param_tty_device_.c_str());
+  RCLCPP_INFO(this->get_logger(), "serial_port: %s", this->param_serial_port_.c_str());
 
   this->joy_pub_ = this->create_publisher<sensor_msgs::msg::Joy>("/rm2_remote/joy", 10);
   this->SerialInit();
@@ -43,7 +43,7 @@ Dr16Node::Dr16Node(const rclcpp::NodeOptions &options) : rclcpp::Node("dr16_node
 Dr16Node::~Dr16Node() { ::close(serial_fd_); }
 
 void Dr16Node::SerialInit() {
-  this->serial_fd_ = ::open(this->param_tty_device_.c_str(), O_RDWR | O_NOCTTY);
+  this->serial_fd_ = ::open(this->param_serial_port_.c_str(), O_RDWR | O_NOCTTY);
   if (this->serial_fd_ < 0) {
     RCLCPP_ERROR(this->get_logger(), "Failed to open serial port: %s", std::strerror(errno));
     rclcpp::shutdown();

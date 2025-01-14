@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(dr16_node)
+project(rm2_remote)
 
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 11)
@@ -9,34 +9,27 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
 endif()
 
-# find dependencies
-find_package(rclcpp REQUIRED)
-find_package(rclcpp_components REQUIRED)
-find_package(rcl_interfaces REQUIRED)
-find_package(ament_cmake REQUIRED)
-find_package(sensor_msgs REQUIRED)
+find_package(ament_cmake_auto REQUIRED)
+ament_auto_find_build_dependencies()
 
-file(GLOB_RECURSE SOURCES src/*.cc)
-add_executable(${PROJECT_NAME} ${SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC include/${PROJECT_NAME})
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+  add_compile_options(-O3)
+  add_compile_options(-DNDEBUG)
+elseif (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  add_compile_options(-O3 -g)
+elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_compile_options(-O0 -g)
+endif()
 
-ament_target_dependencies(${PROJECT_NAME}
-  rclcpp
-  rclcpp_components
-  rcl_interfaces
-  rclcpp
-  sensor_msgs
-)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
+ament_auto_add_executable(dji_dr16 src/dji_dr16.cc)
 
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS dji_dr16
   DESTINATION lib/${PROJECT_NAME}
   )
-install(DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}
-)
-install(DIRECTORY config
-  DESTINATION share/${PROJECT_NAME}
-)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

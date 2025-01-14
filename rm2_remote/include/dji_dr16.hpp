@@ -29,7 +29,7 @@ class Dr16Node : public rclcpp::Node {
   void Unpack(int received_total_data_len);
 
  private:
-  std::string param_tty_device_{};
+  std::string param_serial_port_{};
   sensor_msgs::msg::Joy joy_msg_;
   std::thread serial_rx_thread_{};
   rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr joy_pub_{nullptr};
