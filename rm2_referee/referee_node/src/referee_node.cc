@@ -72,8 +72,6 @@ void RefereeNode::SpawnPublishers() {
       this->create_publisher<rm2_referee_msgs::msg::GameRobotHP>("/rm2_referee/game_robot_hp", rclcpp::SensorDataQoS());
   event_data_pub_ =
       this->create_publisher<rm2_referee_msgs::msg::EventData>("/rm2_referee/event_data", rclcpp::SensorDataQoS());
-  ext_supply_projectile_action_pub_ = this->create_publisher<rm2_referee_msgs::msg::ExtSupplyProjectileAction>(
-      "/rm2_referee/ext_supply_projectile_action", rclcpp::SensorDataQoS());
   referee_warning_pub_ = this->create_publisher<rm2_referee_msgs::msg::RefereeWarning>("/rm2_referee/referee_warning",
                                                                                        rclcpp::SensorDataQoS());
   dart_info_pub_ =
@@ -85,8 +83,6 @@ void RefereeNode::SpawnPublishers() {
   robot_pos_pub_ =
       this->create_publisher<rm2_referee_msgs::msg::RobotPos>("/rm2_referee/robot_pos", rclcpp::SensorDataQoS());
   buff_pub_ = this->create_publisher<rm2_referee_msgs::msg::Buff>("/rm2_referee/buff", rclcpp::SensorDataQoS());
-  air_support_data_pub_ = this->create_publisher<rm2_referee_msgs::msg::AirSupportData>("/rm2_referee/air_support_data",
-                                                                                        rclcpp::SensorDataQoS());
   hurt_data_pub_ =
       this->create_publisher<rm2_referee_msgs::msg::HurtData>("/rm2_referee/hurt_data", rclcpp::SensorDataQoS());
   shoot_data_pub_ =
@@ -164,7 +160,7 @@ void RefereeNode::PublishMsg(uint8_t *packet_payload, OpCodeEnum op_code) {
       this->game_robot_hp_msg_.red_2_robot_hp = (packet_payload[3] << 8) | packet_payload[2];
       this->game_robot_hp_msg_.red_3_robot_hp = (packet_payload[5] << 8) | packet_payload[4];
       this->game_robot_hp_msg_.red_4_robot_hp = (packet_payload[7] << 8) | packet_payload[6];
-      this->game_robot_hp_msg_.red_5_robot_hp = (packet_payload[9] << 8) | packet_payload[8];
+      this->game_robot_hp_msg_.reserved = (packet_payload[9] << 8) | packet_payload[8];
       this->game_robot_hp_msg_.red_7_robot_hp = (packet_payload[11] << 8) | packet_payload[10];
       this->game_robot_hp_msg_.red_outpost_hp = (packet_payload[13] << 8) | packet_payload[12];
       this->game_robot_hp_msg_.red_base_hp = (packet_payload[15] << 8) | packet_payload[14];
@@ -172,7 +168,7 @@ void RefereeNode::PublishMsg(uint8_t *packet_payload, OpCodeEnum op_code) {
       this->game_robot_hp_msg_.blue_2_robot_hp = (packet_payload[19] << 8) | packet_payload[18];
       this->game_robot_hp_msg_.blue_3_robot_hp = (packet_payload[21] << 8) | packet_payload[20];
       this->game_robot_hp_msg_.blue_4_robot_hp = (packet_payload[23] << 8) | packet_payload[22];
-      this->game_robot_hp_msg_.blue_5_robot_hp = (packet_payload[25] << 8) | packet_payload[24];
+      this->game_robot_hp_msg_.reserved_2 = (packet_payload[25] << 8) | packet_payload[24];
       this->game_robot_hp_msg_.blue_7_robot_hp = (packet_payload[27] << 8) | packet_payload[26];
       this->game_robot_hp_msg_.blue_outpost_hp = (packet_payload[29] << 8) | packet_payload[28];
       this->game_robot_hp_msg_.blue_base_hp = (packet_payload[31] << 8) | packet_payload[30];
@@ -183,15 +179,6 @@ void RefereeNode::PublishMsg(uint8_t *packet_payload, OpCodeEnum op_code) {
       this->event_data_msg_.header.stamp = this->get_clock()->now();
       memcpy(&this->event_data_msg_.event_data, packet_payload, 4);
       this->event_data_pub_->publish(this->event_data_msg_);
-      break;
-    }
-    case OpCodeEnum::kExtSupplyProjectileAction: {
-      this->ext_supply_projectile_action_msg_.header.stamp = this->get_clock()->now();
-      this->ext_supply_projectile_action_msg_.reserved = packet_payload[0];
-      this->ext_supply_projectile_action_msg_.supply_robot_id = packet_payload[1];
-      this->ext_supply_projectile_action_msg_.supply_projectile_step = packet_payload[2];
-      this->ext_supply_projectile_action_msg_.supply_projectile_num = packet_payload[3];
-      this->ext_supply_projectile_action_pub_->publish(this->ext_supply_projectile_action_msg_);
       break;
     }
     case OpCodeEnum::kRefereeWarning: {
@@ -226,9 +213,9 @@ void RefereeNode::PublishMsg(uint8_t *packet_payload, OpCodeEnum op_code) {
     }
     case OpCodeEnum::kPowerHeatData: {
       this->power_heat_data_msg_.header.stamp = this->get_clock()->now();
-      memcpy(&this->power_heat_data_msg_.chassis_voltage, &packet_payload[0], 2);
-      memcpy(&this->power_heat_data_msg_.chassis_current, &packet_payload[2], 2);
-      memcpy(&this->power_heat_data_msg_.chassis_power, &packet_payload[4], 4);
+      memcpy(&this->power_heat_data_msg_.reserved, &packet_payload[0], 2);
+      memcpy(&this->power_heat_data_msg_.reserved_2, &packet_payload[2], 2);
+      memcpy(&this->power_heat_data_msg_.reserved_3, &packet_payload[4], 4);
       memcpy(&this->power_heat_data_msg_.buffer_energy, &packet_payload[8], 2);
       memcpy(&this->power_heat_data_msg_.shooter_17mm_1_barrel_heat, &packet_payload[10], 2);
       memcpy(&this->power_heat_data_msg_.shooter_17mm_2_barrel_heat, &packet_payload[12], 2);
@@ -252,13 +239,6 @@ void RefereeNode::PublishMsg(uint8_t *packet_payload, OpCodeEnum op_code) {
       this->buff_msg_.vulnerability_buff = packet_payload[3];
       this->buff_msg_.attack_buff = (packet_payload[4] << 8) | packet_payload[5];
       this->buff_pub_->publish(this->buff_msg_);
-      break;
-    }
-    case OpCodeEnum::kAirSupportData: {
-      this->air_support_data_msg_.header.stamp = this->get_clock()->now();
-      this->air_support_data_msg_.airforce_status = packet_payload[0];
-      this->air_support_data_msg_.time_remain = packet_payload[1];
-      this->air_support_data_pub_->publish(this->air_support_data_msg_);
       break;
     }
     case OpCodeEnum::kHurtData: {
@@ -310,20 +290,14 @@ void RefereeNode::PublishMsg(uint8_t *packet_payload, OpCodeEnum op_code) {
       memcpy(&this->ground_robot_position_msg_.standard_3_y, &packet_payload[20], 4);
       memcpy(&this->ground_robot_position_msg_.standard_4_x, &packet_payload[24], 4);
       memcpy(&this->ground_robot_position_msg_.standard_4_y, &packet_payload[28], 4);
-      memcpy(&this->ground_robot_position_msg_.standard_5_x, &packet_payload[32], 4);
-      memcpy(&this->ground_robot_position_msg_.standard_5_y, &packet_payload[36], 4);
+      memcpy(&this->ground_robot_position_msg_.reserved, &packet_payload[32], 4);
+      memcpy(&this->ground_robot_position_msg_.reserved_2, &packet_payload[36], 4);
       this->ground_robot_position_pub_->publish(this->ground_robot_position_msg_);
       break;
     }
     case OpCodeEnum::kRadarMarkData: {
       this->radar_mark_data_msg_.header.stamp = this->get_clock()->now();
-      this->radar_mark_data_msg_.mark_hero_progress = packet_payload[0];
-      this->radar_mark_data_msg_.mark_engineer_progress = packet_payload[1];
-      this->radar_mark_data_msg_.mark_standard_3_progress = packet_payload[2];
-      this->radar_mark_data_msg_.mark_standard_4_progress = packet_payload[3];
-      this->radar_mark_data_msg_.mark_standard_5_progress = packet_payload[4];
-      this->radar_mark_data_msg_.mark_sentry_progress = packet_payload[5];
-      this->radar_mark_data_pub_->publish(this->radar_mark_data_msg_);
+      this->radar_mark_data_msg_.mark_progress = packet_payload[0];
       break;
     }
     case OpCodeEnum::kSentryInfo: {

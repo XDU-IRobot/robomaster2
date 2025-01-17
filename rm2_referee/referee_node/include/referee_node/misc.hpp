@@ -4,12 +4,10 @@
 
 #include "rm2_referee_msgs/msg/custom_robot_data.hpp"
 #include "rm2_referee_msgs/msg/remote_control.hpp"
-#include "rm2_referee_msgs/msg/air_support_data.hpp"
 #include "rm2_referee_msgs/msg/buff.hpp"
 #include "rm2_referee_msgs/msg/dart_client_cmd.hpp"
 #include "rm2_referee_msgs/msg/dart_info.hpp"
 #include "rm2_referee_msgs/msg/event_data.hpp"
-#include "rm2_referee_msgs/msg/ext_supply_projectile_action.hpp"
 #include "rm2_referee_msgs/msg/game_result.hpp"
 #include "rm2_referee_msgs/msg/game_robot_hp.hpp"
 #include "rm2_referee_msgs/msg/game_status.hpp"
@@ -36,14 +34,12 @@ enum class OpCodeEnum : uint16_t {
   kGameResult = 0x2,
   kGameRobotHp = 0x3,
   kEventData = 0x101,
-  kExtSupplyProjectileAction = 0x102,
   kRefereeWarning = 0x104,
   kDartInformation = 0x105,
   kRobotStatus = 0x201,
   kPowerHeatData = 0x202,
   kRobotPos = 0x203,
   kBuff = 0x204,
-  kAirSupportData = 0x205,
   kHurtData = 0x206,
   kShootData = 0x207,
   kProjectileAllowance = 0x208,

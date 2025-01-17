@@ -58,15 +58,12 @@ class RefereeNode : public rclcpp::Node {
   rclcpp::Publisher<rm2_referee_msgs::msg::GameResult>::SharedPtr game_result_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::GameRobotHP>::SharedPtr game_robot_hp_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::EventData>::SharedPtr event_data_pub_{nullptr};
-  rclcpp::Publisher<rm2_referee_msgs::msg::ExtSupplyProjectileAction>::SharedPtr ext_supply_projectile_action_pub_{
-      nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::RefereeWarning>::SharedPtr referee_warning_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::DartInfo>::SharedPtr dart_info_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::RobotStatus>::SharedPtr robot_status_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::PowerHeatData>::SharedPtr power_heat_data_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::RobotPos>::SharedPtr robot_pos_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::Buff>::SharedPtr buff_pub_{nullptr};
-  rclcpp::Publisher<rm2_referee_msgs::msg::AirSupportData>::SharedPtr air_support_data_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::HurtData>::SharedPtr hurt_data_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::ShootData>::SharedPtr shoot_data_pub_{nullptr};
   rclcpp::Publisher<rm2_referee_msgs::msg::ProjectileAllowance>::SharedPtr projectile_allowance_pub_{nullptr};
@@ -86,14 +83,12 @@ class RefereeNode : public rclcpp::Node {
   rm2_referee_msgs::msg::GameResult game_result_msg_{};
   rm2_referee_msgs::msg::GameRobotHP game_robot_hp_msg_{};
   rm2_referee_msgs::msg::EventData event_data_msg_{};
-  rm2_referee_msgs::msg::ExtSupplyProjectileAction ext_supply_projectile_action_msg_{};
   rm2_referee_msgs::msg::RefereeWarning referee_warning_msg_{};
   rm2_referee_msgs::msg::DartInfo dart_info_msg_{};
   rm2_referee_msgs::msg::RobotStatus robot_status_msg_{};
   rm2_referee_msgs::msg::PowerHeatData power_heat_data_msg_{};
   rm2_referee_msgs::msg::RobotPos robot_pos_msg_{};
   rm2_referee_msgs::msg::Buff buff_msg_{};
-  rm2_referee_msgs::msg::AirSupportData air_support_data_msg_{};
   rm2_referee_msgs::msg::HurtData hurt_data_msg_{};
   rm2_referee_msgs::msg::ShootData shoot_data_msg_{};
   rm2_referee_msgs::msg::ProjectileAllowance projectile_allowance_msg_{};
