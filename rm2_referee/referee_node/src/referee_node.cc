@@ -141,8 +141,8 @@ void RefereeNode::PublishMsg(uint8_t *packet_payload, OpCodeEnum op_code) {
   switch (op_code) {
     case OpCodeEnum::kGameStatus: {
       this->game_status_msg_.header.stamp = this->get_clock()->now();
-      this->game_status_msg_.game_type = (packet_payload[0] >> 4);
-      this->game_status_msg_.game_progress = packet_payload[0] & 0b00001111;
+      this->game_status_msg_.game_type = packet_payload[0] & 0x0f;
+      this->game_status_msg_.game_progress = (packet_payload[0] >> 4);
       this->game_status_msg_.stage_remain_time = (packet_payload[2] << 8) | packet_payload[1];
       memcpy(&this->game_status_msg_.sync_timestamp, &packet_payload[3], 8);
       this->game_status_pub_->publish(this->game_status_msg_);
