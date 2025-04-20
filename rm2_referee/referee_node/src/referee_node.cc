@@ -22,7 +22,12 @@ RefereeNode::RefereeNode(const rclcpp::NodeOptions &options)
   }
   if (this->param_enable_fpv_) {
     RCLCPP_INFO(this->get_logger(), "FPV data link: Enabled @ %s", this->param_fpv_tty_device_.c_str());
-    this->SerialInit(this->param_fpv_tty_device_, this->fpv_serial_);
+    if (param_new_vt_) {
+      this->SerialInit(this->param_fpv_tty_device_, this->fpv_serial_, 921600);
+    } else {
+      this->SerialInit(this->param_fpv_tty_device_, this->fpv_serial_);
+    }
+
     this->fpv_serial_rx_thread_ = std::thread([this] {
       for (;;) {
         this->fpv_decoder_ << this->fpv_serial_->read();
@@ -113,6 +118,7 @@ void RefereeNode::SpawnPublishers() {
 void RefereeNode::GetParameters() {
   this->get_parameter("enable_normal", param_enable_normal_);
   this->get_parameter("enable_fpv", param_enable_fpv_);
+  this->get_parameter("new_vt", param_new_vt_);
   this->get_parameter("normal_tty_device", param_normal_tty_device_);
   this->get_parameter("fpv_tty_device", param_fpv_tty_device_);
 }
@@ -122,8 +128,8 @@ void RefereeNode::GetParameters() {
  * @param tty_device 串口设备名
  * @param serial     Serial对象指针
  */
-void RefereeNode::SerialInit(std::string tty_device, std::unique_ptr<serial::Serial> &serial) {
-  serial = std::make_unique<serial::Serial>(tty_device, 115200, serial::Timeout::simpleTimeout(1000));
+void RefereeNode::SerialInit(std::string tty_device, std::unique_ptr<serial::Serial> &serial, size_t baudrate) {
+  serial = std::make_unique<serial::Serial>(tty_device, baudrate, serial::Timeout::simpleTimeout(1000));
   if (!serial->isOpen()) {
     RCLCPP_ERROR(this->get_logger(), "Failed to open normal serial port: %s", tty_device.c_str());
     rclcpp::shutdown();

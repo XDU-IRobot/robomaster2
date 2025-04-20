@@ -25,7 +25,7 @@ class RefereeNode : public rclcpp::Node {
  private:
   void SpawnPublishers();
   void GetParameters();
-  void SerialInit(std::string tty_device, std::unique_ptr<serial::Serial>& serial);
+  void SerialInit(std::string tty_device, std::unique_ptr<serial::Serial>& serial, size_t baudrate = 115200);
   void PublishMsg(uint8_t* data, OpCodeEnum op_code);
 
  private:
@@ -38,6 +38,7 @@ class RefereeNode : public rclcpp::Node {
   /** <Parameters> **/
   std::string param_normal_tty_device_{};
   std::string param_fpv_tty_device_{};
+  bool param_new_vt_{};
   bool param_enable_normal_{};
   bool param_enable_fpv_{};
   /** </Parameters> **/
