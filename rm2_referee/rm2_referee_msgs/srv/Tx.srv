@@ -1,5 +1,5 @@
 std_msgs/Header header
-int8[] data
+uint8[] data
 ---
 std_msgs/Header header
 bool ok
